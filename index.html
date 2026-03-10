@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barras de Progresso - Versão RPG</title>
+<style>
+    body {
+        background: transparent;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+    }
+
+    .container {
+        width: 80%;
+        margin: 25px auto;
+    }
+
+    .label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        font-size: 18px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        background-color: rgba(200,200,200,0.2);
+        border-radius: 30px;
+        overflow: hidden;
+        height: 35px;
+    }
+
+    .progress {
+        height: 100%;
+        width: 0%;
+        transition: width 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .rosa { background-color: #ff6fa5; }
+    .verde { background-color: #4CAF50; }
+    .preto { background-color: #000000; }
+
+    .buttons {
+        margin-top: 10px;
+    }
+
+    button {
+        margin: 5px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .plus { background-color: #d4ffd4; }
+    .minus { background-color: #ffd4d4; }
+    .mission { background-color: #d4e4ff; }
+
+</style>
+</head>
+<body>
+
+<h1>⚔️ Progresso do Jogo ⚔️</h1>
+
+<!-- 5ºA - 3 MISSÕES (cada missão ≈ 33.33%) -->
+<div class="container">
+    <div class="label">5ºA (3 Missões)</div>
+    <div class="progress-bar">
+        <div id="a" class="progress rosa">0%</div>
+    </div>
+    <div class="buttons">
+        <button class="mission" onclick="missionProgress('a', 33.33)">++ Missão</button>
+        <button class="plus" onclick="change('a', 10)">+10%</button>
+        <button class="plus" onclick="change('a', 1)">+1</button>
+        <button class="minus" onclick="change('a', -10)">-10%</button>
+        <button class="minus" onclick="change('a', -1)">-1</button>
+        <button onclick="resetBar('a')">Reset</button>
+    </div>
+</div>
+
+<!-- 5ºC - 4 MISSÕES (cada missão = 25%) -->
+<div class="container">
+    <div class="label">5ºC (4 Missões)</div>
+    <div class="progress-bar">
+        <div id="c" class="progress verde">0%</div>
+    </div>
+    <div class="buttons">
+        <button class="mission" onclick="missionProgress('c', 25)">++ Missão</button>
+        <button class="plus" onclick="change('c', 10)">+10%</button>
+        <button class="plus" onclick="change('c', 1)">+1</button>
+        <button class="minus" onclick="change('c', -10)">-10%</button>
+        <button class="minus" onclick="change('c', -1)">-1</button>
+        <button onclick="resetBar('c')">Reset</button>
+    </div>
+</div>
+
+<!-- Kieran -->
+<div class="container">
+    <div class="label">Kieran (Vilão)</div>
+    <div class="progress-bar">
+        <div id="k" class="progress preto">0%</div>
+    </div>
+    <div class="buttons">
+        <button class="plus" onclick="change('k', 10)">+10%</button>
+        <button class="plus" onclick="change('k', 1)">+1</button>
+        <button class="minus" onclick="change('k', -10)">-10%</button>
+        <button class="minus" onclick="change('k', -1)">-1</button>
+        <button onclick="resetBar('k')">Reset</button>
+    </div>
+</div>
+
+<script>
+// carregar progresso guardado
+window.onload = function() {
+    ['a','c','k'].forEach(id => {
+        let saved = localStorage.getItem('progress_'+id);
+        if(saved){
+            let bar = document.getElementById(id);
+            bar.style.width = saved + "%";
+            bar.textContent = Math.round(saved) + "%";
+        }
+    });
+}
+
+function save(id,value){
+    localStorage.setItem('progress_'+id,value);
+}
+
+function change(id, amount) {
+    let bar = document.getElementById(id);
+    let current = parseFloat(bar.style.width) || 0;
+    let value = Math.max(0, Math.min(100, current + amount));
+    bar.style.width = value + "%";
+    bar.textContent = Math.round(value) + "%";
+    save(id,value);
+}
+
+function missionProgress(id, amount) {
+    let bar = document.getElementById(id);
+    let current = parseFloat(bar.style.width) || 0;
+    let value = Math.max(0, Math.min(100, current + amount));
+    bar.style.width = value + "%";
+    bar.textContent = Math.round(value) + "%";
+    save(id,value);
+}
+
+function resetBar(id) {
+    let bar = document.getElementById(id);
+    bar.style.width = "0%";
+    bar.textContent = "0%";
+    localStorage.removeItem('progress_'+id);
+}
+</script>
+
+</body>
+</html>
